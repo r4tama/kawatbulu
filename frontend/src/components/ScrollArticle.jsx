@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -126,7 +126,14 @@ export default function ScrollArticle() {
             <ambientLight intensity={0.65} />
             <directionalLight position={[3, 4, 3]} intensity={1.3} />
             <pointLight position={[-3, -1, 2]} intensity={0.6} color="#FF3B6E" />
-            <PipeCleanerWire3D progressRef={progressRef} />
+            {/* FIX: setiap children R3F yang bisa "suspend" (useLoader,
+                useGLTF, useFont/Text3D, dst.) wajib ada di dalam Suspense —
+                kalau tidak, saat loading-nya belum selesai React bisa
+                unmount seluruh subtree Canvas (bukan cuma nge-fallback),
+                yang kelihatannya seperti "3D-nya bikin app blank". */}
+            <Suspense fallback={null}>
+              <PipeCleanerWire3D progressRef={progressRef} />
+            </Suspense>
           </Canvas>
         </div>
       </div>

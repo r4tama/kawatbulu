@@ -49,27 +49,56 @@ export default function Gallery() {
   const [activeTag, setActiveTag] = useState("Semua");
   const [selected, setSelected] = useState(null);
 
-  // Ambil data dinamis dari Backend Express (dengan fallback aman)
+  // Ambil data dinamis dari Backend Express (dengan fallback aman ke
+  // FALLBACK_ITEMS di atas kalau /api/catalog 404, network error, atau
+  // balasan bukan JSON — jadi galeri SELALU render 6 item, live atau tidak).
   useEffect(() => {
+    let cancelled = false;
+
     fetch("/api/catalog")
       .then((res) => {
-        if (!res.ok) throw new Error("API Offline");
+        // Cek res.ok dulu sebelum res.json() — kalau tidak, response 404
+        // HTML dari Vercel akan bikin JSON.parse gagal ("unexpected
+        // character at line 1 column 1") alih-alih ditangkap rapi di sini.
+        if (!res.ok) throw new Error(`API merespons status ${res.status}`);
         return res.json();
       })
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          // Normalisasi key `imageUrl` dari backend ke `image` jika beda
-          const formatted = data.slice(0, 6).map((item) => ({
+      .then((json) => {
+        if (cancelled) return;
+
+        // Bentuk asli respons backend: { success: true, data: { shapes,
+        // colorThemes, pricing, items } } — BUKAN array telanjang. Baca
+        // dari json.data.items, lengkap dengan lookup label bentuk dari
+        // json.data.shapes supaya filter kategori (CATEGORIES) match.
+        const apiItems = json?.data?.items;
+        const shapeLabels = Object.fromEntries(
+          (json?.data?.shapes || []).map((s) => [s.id, s.label])
+        );
+
+        if (Array.isArray(apiItems) && apiItems.length > 0) {
+          const formatted = apiItems.slice(0, 6).map((item) => ({
             ...item,
-            image: item.imageUrl || item.image,
+            title: item.title || item.name,
+            // Normalisasi key gambar: backend sudah kirim `image` (URL
+            // penuh), tapi tetap jaga-jaga kalau suatu saat berubah jadi
+            // `imageUrl`.
+            image: item.image || item.imageUrl,
+            tag: item.tag || shapeLabels[item.shape] || item.category || "Custom",
           }));
           setItems(formatted);
+        } else {
+          setItems(FALLBACK_ITEMS);
         }
       })
       .catch(() => {
-        // Jika API backend 404 / error, tetap pakai FALLBACK_ITEMS
-        setItems(FALLBACK_ITEMS);
+        // Jika API backend 404 / error / JSON invalid, tetap pakai
+        // FALLBACK_ITEMS — galeri tidak pernah blank.
+        if (!cancelled) setItems(FALLBACK_ITEMS);
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = useMemo(() => {
