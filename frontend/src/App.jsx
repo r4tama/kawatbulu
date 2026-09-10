@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Navbar from "./components/Navbar";
 import Hero3D from "./components/Hero3D";
+import About from "./components/About";
 import FeatureGrid from "./components/FeatureGrid";
 import ScrollArticle from "./components/ScrollArticle";
 import Gallery from "./components/Gallery";
@@ -100,6 +101,9 @@ export default function App() {
       <div className="noise-overlay" />
       <Navbar />
       <Hero />
+      <div id="about">
+        <About />
+      </div>
       <div id="features">
         <FeatureGrid />
       </div>

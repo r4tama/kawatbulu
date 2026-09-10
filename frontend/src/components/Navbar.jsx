@@ -5,6 +5,9 @@ export default function Navbar() {
         by.elveee<span className="text-accent-pink">.</span>
       </span>
       <div className="hidden md:flex items-center gap-8 text-sm text-white/70">
+        <a href="#about" className="hover:text-white transition">
+          Tentang
+        </a>
         <a href="#features" className="hover:text-white transition">
           Kenapa Kami
         </a>
