@@ -10,23 +10,12 @@ import OrderWidget from "./components/OrderWidget";
 import Footer from "./components/Footer";
 import Preloader from "./components/Preloader";
 
-// Dijalankan sekali di module scope (bukan di dalam komponen) supaya
-// eksekusinya seawal mungkin — sebelum React sempat render apa pun,
-// dan pasti sebelum ScrollTrigger di ScrollArticle sempat baca posisi
-// scroll saat mount.
+// Dijalankan sekali di module scope
 if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
   window.history.scrollRestoration = "manual";
   window.scrollTo(0, 0);
 }
 
-/**
- * AmbientBackground — lapisan background global buat SELURUH web app:
- * dasar dark-mode pekat + dot-grid overlay tipis + beberapa "glow orb"
- * (ambient light leaks) blur-3xl khas dark cyberpunk/creative-dev
- * portfolio. Dipasang `fixed inset-0 -z-10` sekali di root App supaya
- * tetap terlihat konsisten di belakang section manapun yang transparan
- * saat user scroll (lihat <ScrollArticle> yang sudah bg-transparent).
- */
 function AmbientBackground() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden bg-base-950 pointer-events-none">
@@ -36,7 +25,6 @@ function AmbientBackground() {
       <div className="absolute top-1/3 -right-32 w-[32rem] h-[32rem] rounded-full bg-accent-mint/15 blur-3xl" />
       <div className="absolute bottom-0 left-1/4 w-[26rem] h-[26rem] rounded-full bg-accent-gold/10 blur-3xl" />
 
-      {/* Vignette halus biar tepi layar tetap gelap pekat */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40" />
     </div>
   );
@@ -80,16 +68,9 @@ function Hero() {
 }
 
 export default function App() {
-  // Konten utama tetap di-mount dari awal (ScrollArticle & ScrollTrigger-nya
-  // termasuk), tapi Preloader menutupi seluruh layar (z-[100]) dan mengunci
-  // body scroll sampai animasi exit-nya selesai. Ini dipilih ketimbang
-  // conditional-mount konten utama supaya ScrollTrigger tidak perlu
-  // re-inisialisasi/refresh setelah preloader hilang.
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Jaring pengaman tambahan: pastikan tetap di top saat App mount,
-    // walau baris di module scope di atas sudah menangani sebagian besar kasus.
     window.scrollTo(0, 0);
   }, []);
 
