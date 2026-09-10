@@ -1,0 +1,27 @@
+{
+  "shapes": [
+    { "id": "hewan", "label": "Hewan", "description": "Kucing, anjing, kelinci, dan karakter hewan lucu lainnya" },
+    { "id": "bunga", "label": "Bunga", "description": "Rangkaian bunga mini penuh warna" },
+    { "id": "custom", "label": "Custom Request", "description": "Bentuk sesuai request/foto referensi kamu" }
+  ],
+  "colorThemes": [
+    { "id": "pastel", "label": "Pastel Dream", "hex": ["#F7C6D9", "#C9E4DE", "#F6E7CB"] },
+    { "id": "vibrant", "label": "Vibrant Pop", "hex": ["#FF3B6E", "#3AB0FF", "#FFD23F"] },
+    { "id": "earth", "label": "Earth Tone", "hex": ["#A47148", "#6B8E4E", "#D9B382"] },
+    { "id": "monochrome", "label": "Mono Elegance", "hex": ["#111111", "#8A8A8A", "#F5F5F5"] }
+  ],
+  "pricing": {
+    "basePrice": 25000,
+    "currency": "IDR",
+    "minQuantity": 1,
+    "maxQuantity": 50
+  },
+  "items": [
+    { "id": "kucing-oren", "name": "Kucing Oren", "shape": "hewan", "colorTheme": "vibrant", "price": 28000, "image": "kucing-oren.jpg" },
+    { "id": "kelinci-pastel", "name": "Kelinci Pastel", "shape": "hewan", "colorTheme": "pastel", "price": 27000, "image": "kelinci-pastel.jpg" },
+    { "id": "bunga-matahari", "name": "Bunga Matahari Mini", "shape": "bunga", "colorTheme": "vibrant", "price": 26000, "image": "bunga-matahari.jpg" },
+    { "id": "rangkaian-mawar", "name": "Rangkaian Mawar", "shape": "bunga", "colorTheme": "earth", "price": 30000, "image": "rangkaian-mawar.jpg" },
+    { "id": "inisial-custom", "name": "Inisial Custom", "shape": "custom", "colorTheme": "monochrome", "price": 25000, "image": "inisial-custom.jpg" },
+    { "id": "karakter-beruang", "name": "Karakter Beruang", "shape": "custom", "colorTheme": "earth", "price": 32000, "image": "karakter-beruang.jpg" }
+  ]
+}
